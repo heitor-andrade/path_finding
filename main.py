@@ -122,9 +122,6 @@ blackSquares = []
 nosPassados = []
 
 WIN.fill(WHITE)
-for i in range(QTDE_SQUARES - 1):
-    pygame.draw.line(WIN, BLACK, ((i + 1)*square_w, 0), ((i+1)*square_w, HEIGHT))
-    pygame.draw.line(WIN, BLACK, (0, (i + 1)*square_w), (WIDTH, (i+1)*square_w))
 
 clock = pygame.time.Clock()
 marcando = False
@@ -148,15 +145,16 @@ while True:
             else:
                 fila.append(i)
         
-        min_f = 100
+        min_f = 1000
         for i in fila:
             if i['coord'] in nosPassados:
                 fila.remove(i)
                 continue
 
-            if i['f'] <= min_f:
+            if i['f'] <= min_f and i['coord'] != nodeAtual['coord']:
                 min_f = i['f']
                 nodeAtual = i
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -184,17 +182,20 @@ while True:
             pygame.draw.rect(WIN, BLACK, pygame.Rect(( (coord_x - 1) * square_w, (coord_y - 1) * square_w), (length)))
 
     for i in posNos:
-        pygame.draw.rect(WIN, BLACK, pygame.Rect(( (i[0] - 1) * square_w, (i[1] - 1) * square_w), (length)))
+        pygame.draw.rect(WIN, RED, pygame.Rect(( (i[0] - 1) * square_w, (i[1] - 1) * square_w), (length)))
 
     for i in nosPassados:
         pygame.draw.rect(WIN, GREEN, pygame.Rect((( i[0] - 1) * square_w, (i[1] - 1) * square_w), length) )
     
-    if nodeAtual in nosPassados:
+    if nodeAtual['coord'] in nosPassados:
         pass
     else:
         nosPassados.append(nodeAtual['coord'])
     
     pygame.draw.rect(WIN, BLUE, pygame.Rect((( nodeAtual['coord'][0] - 1) * square_w, (nodeAtual['coord'][1] - 1) * square_w), (length)))
 
+    for i in range(QTDE_SQUARES - 1):
+        pygame.draw.line(WIN, BLACK, ((i + 1)*square_w, 0), ((i+1)*square_w, HEIGHT))
+        pygame.draw.line(WIN, BLACK, (0, (i + 1)*square_w), (WIDTH, (i+1)*square_w))
 
     pygame.display.update()
